@@ -1,0 +1,22 @@
+<template name="Posts2">
+  <table>
+    <tbody>
+      <tr>
+        <th data-sortby="title">Title</th>
+        <th data-sortby="author.name">Username</th>
+      </tr>
+    </tbody>
+    <tbody>
+      {{#each posts}}
+        {{> Post2}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="Post2">
+  <tr>
+    <td>{{title}}</td>
+    <td>{{author.name}}</td>
+  </tr>
+</template>
