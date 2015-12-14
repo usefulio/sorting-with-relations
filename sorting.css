@@ -4,6 +4,12 @@ body {
   font-family: 'Arial', sans-serif;
 }
 
+.solution {
+  font-weight: bold;
+  text-align: center;
+  margin: 1em 0;
+}
+
 .row {
   white-space: nowrap;
 }
@@ -17,6 +23,7 @@ body {
 }
 
 table {
+  width: 100%;
   border-collapse: collapse;
 }
 
