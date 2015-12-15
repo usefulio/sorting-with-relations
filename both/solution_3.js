@@ -22,14 +22,3 @@ Post3 = Astro.Class({
     }
   }
 });
-
-if (Meteor.isClient) {
-  Mongo.Collection.prototype.loadRelated = function(callback) {
-    if (!_.isFunction(callback)) {
-      return;
-    }
-    this._collection._docs.forEach(function(doc) {
-      callback.call(null, doc);
-    });
-  };
-}

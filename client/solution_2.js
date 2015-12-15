@@ -21,6 +21,7 @@ Template.Posts2.events({
 Template.Posts2.helpers({
   posts: function() {
     console.time(2);
+
     var tmpl = Template.instance();
     var sortBy = tmpl.sortBy.get();
     var sortOrder = tmpl.sortOrder.get();

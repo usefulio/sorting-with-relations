@@ -1,3 +1,49 @@
+var defineRelation = function(
+  Collection, RelatedCollection, relationName, relatedFieldName
+) {
+  Collection._computations = Collection._computations || {};
+  var comps = Collection._computations[relationName] = {};
+
+  var stop = function(doc) {
+    if (comps[doc._id]) {
+      comps[doc._id].stop();
+    }
+  };
+
+  var update = function(doc) {
+    var setModifier = {};
+
+    setModifier[relationName] = doc[relatedFieldName] ?
+      RelatedCollection.findOne(doc[relatedFieldName]) : undefined;
+
+    Collection._collection.update(doc._id, {
+      $set: setModifier
+    });
+  };
+
+  Collection.find().observe({
+    added: function(newDoc) {
+      stop(newDoc);
+      comps[newDoc._id] = Tracker.autorun(function() {
+        update(newDoc);
+      });
+    },
+    changed: function(newDoc, oldDoc) {
+      if (newDoc[relatedFieldName] !== oldDoc[relatedFieldName]) {
+        stop(oldDoc);
+        comps[newDoc._id] = Tracker.autorun(function() {
+          update(newDoc);
+        });
+      }
+    },
+    removed: function(oldDoc) {
+      stop(oldDoc);
+    }
+  });
+};
+
+defineRelation(Posts3, Users3, 'author', 'userId');
+
 Template.Posts3.onCreated(function() {
   var tmpl = this;
 
@@ -21,12 +67,6 @@ Template.Posts3.events({
 Template.Posts3.helpers({
   posts: function() {
     console.time(3);
-    if (Users3.find().count() > 0) {
-      Posts3.loadRelated(function(post) {
-        post.author =
-          post.author || Users3.findOne(post.userId, {transform: null});
-      });
-    }
 
     var tmpl = Template.instance();
     var sortBy = tmpl.sortBy.get();
@@ -35,6 +75,7 @@ Template.Posts3.helpers({
     var sortSpecifier = {};
     sortSpecifier[sortBy] = sortOrder;
     var posts = Posts3.find({}, {sort: sortSpecifier});
+
     console.timeEnd(3);
     return posts;
   }

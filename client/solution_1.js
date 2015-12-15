@@ -21,6 +21,7 @@ Template.Posts1.events({
 Template.Posts1.helpers({
   posts: function() {
     console.time(1);
+
     var tmpl = Template.instance();
     var sortBy = tmpl.sortBy.get();
     var sortOrder = tmpl.sortOrder.get();
@@ -28,6 +29,7 @@ Template.Posts1.helpers({
     var sortSpecifier = {};
     sortSpecifier[sortBy] = sortOrder;
     var posts = Posts1.find({}, {sort: sortSpecifier});
+
     console.timeEnd(1);
     return posts;
   }
