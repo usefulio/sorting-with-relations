@@ -20,3 +20,4 @@ insecure                # Allow all DB writes from clients (for prototyping)
 jagi:astronomy
 reactive-var
 autopublish
+usefulio:astronomy-relations
